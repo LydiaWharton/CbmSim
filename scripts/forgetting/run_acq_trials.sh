@@ -20,15 +20,25 @@ inputs_dir=lobule_v
 
 # echo $reset_nums
 
+#isi's
+declare -a isis=(200 500 1000 1500)
+
 # for num in $(ls * | awk -F_ '{print $4}' | awk -F. {'print $1'} | sort -k 1n); do
 # 	cd ../../../../build/
 # ## for num in {1}; do
 
 cd ../../build/
+for isi in ${isis[@]};
+do
+    
 
-./cbm_sim_gpu_0 --mfnc-off \
--i eq_ISI_500.sim \
--s acq_ISI_500.sess \
--r PC,NC \
--o test_acq_ISI_500
+    ./cbm_sim_gpu_0 --mfnc-off \
+    -i eq_ISI_${isi}.sim \
+    -s acq_ISI_${isi}.sess \
+    -w PFPC \
+    -r PC,NC \
+    -o acq_mins_ISI_${isi}
+    echo 'finished training' ${isi}
+
+done
 
