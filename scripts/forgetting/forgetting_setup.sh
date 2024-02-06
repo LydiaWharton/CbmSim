@@ -4,9 +4,8 @@
 root_dir="/home/seang/Dev/Git/CbmSim/" # you can always make this an env var
 build_dir="${root_dir}build/"
 scripts_dir="${root_dir}scripts/"
-#declare -a isis=( 200 500 1000 1500 2000 )
+declare -a isis=( 200 500 1000 1500 )
 declare -a reset_test_nums=( 1000 2000 3000 4000 5000 6000 7000 8000 9000 10000 )
-declare -a isis=( 500 )
 
 # set -x
 
@@ -38,7 +37,7 @@ order_reset_insert_weights() {
 	  for isi in ${isis[@]}; do
       ./order_reset_insert_weights.py \
         $reset_num \
-        ${input_base}_ISI_${isi}.pfpc \
+        ${input_base}_ISI_${isi}.pfpcw \
         ${input_base}_ISI_${isi}.sim
     done
   done
