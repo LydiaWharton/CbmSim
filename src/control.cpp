@@ -771,6 +771,51 @@ void Control::runSession(struct gui *gui)
 			}
 			reset_spike_sums();
 		}
+
+
+		if (data_out_dir_created) {
+			if (currTrialName != "probe_trial" && nextTrialName == "probe_trial") {
+
+				std::string weight_steps_ltp_fname = data_out_path + "/" + data_out_base_name 
+													+ "_TRIAL_" + std::to_string(trial) + "_LTP.pfpcpe";
+				LOG_DEBUG("Saving pfpc ltp plasticity events array to file at trial %d...", trial);
+				std::fstream out_weight_steps_ltp_buf(weight_steps_ltp_fname.c_str(), std::ios::out | std::ios::binary);
+				simCore->getMZoneList()[0]->save_weight_steps_ltp_to_file(out_weight_steps_ltp_buf);
+				out_weight_steps_ltp_buf.close();
+
+				//std::string weight_mis_steps_ltp_fname = data_out_path + "/" + data_out_base_name 
+				//									 + "_TRIAL_" + std::to_string(trial) + "_LTP_MISS.pfpcpe";
+				//LOG_DEBUG("Saving pfpc ltp plasticity mis events array to file at trial %d...", trial);
+				//std::fstream out_weight_mis_steps_ltp_buf(weight_mis_steps_ltp_fname.c_str(), std::ios::out | std::ios::binary);
+				//simCore->getMZoneList()[0]->save_weight_mis_steps_ltp_to_file(out_weight_mis_steps_ltp_buf);
+				//out_weight_mis_steps_ltp_buf.close();
+
+				std::string weight_steps_ltd_fname = data_out_path + "/" + data_out_base_name + "_TRIAL_"
+													+ std::to_string(trial) + "_LTD.pfpcpe";
+				LOG_DEBUG("Saving pfpc ltd plasticity events array to file at trial %d...", trial);
+				std::fstream out_weight_steps_ltd_buf(weight_steps_ltd_fname.c_str(), std::ios::out | std::ios::binary);
+				simCore->getMZoneList()[0]->save_weight_steps_ltd_to_file(out_weight_steps_ltd_buf);
+				out_weight_steps_ltd_buf.close();
+
+				//std::string weight_mis_steps_ltd_fname = data_out_path + "/" + data_out_base_name 
+				//									 + "_TRIAL_" + std::to_string(trial) + "_LTD_MISS.pfpcpe";
+				//LOG_DEBUG("Saving pfpc ltd plasticity mis events array to file at trial %d...", trial);
+				//std::fstream out_weight_mis_steps_ltd_buf(weight_mis_steps_ltd_fname.c_str(), std::ios::out | std::ios::binary);
+				//simCore->getMZoneList()[0]->save_weight_mis_steps_ltd_to_file(out_weight_mis_steps_ltd_buf);
+				//out_weight_mis_steps_ltd_buf.close();
+
+
+			}
+
+			if (currTrialName == "probe_trial" && nextTrialName != "probe_trial") {
+				simCore->getMZoneList()[0]->reset_weight_steps_ltp();
+				LOG_DEBUG("Resetting PFPC synapse LTP steps at %d...", trial);
+				simCore->getMZoneList()[0]->reset_weight_steps_ltd();
+				LOG_DEBUG("Resetting PFPC synapse LTD steps at %d...", trial);
+			}
+
+		}
+			
 		// save gr rasters into new file every trial 
 		//save_gr_raster();
 		//if (data_out_dir_created && trial % 500 == 0) {
@@ -803,8 +848,11 @@ void Control::runSession(struct gui *gui)
 		//	simCore->getMZoneList()[0]->save_weight_mis_steps_ltd_to_file(out_weight_mis_steps_ltd_buf);
 		//	out_weight_mis_steps_ltd_buf.close();
 		//}
+
+
 		trial++;
 	}
+	
 	if (run_state == NOT_IN_RUN) LOG_INFO("Simulation terminated.");
 	else if (run_state == IN_RUN_NO_PAUSE) LOG_INFO("Simulation Completed.");
 	run_state = NOT_IN_RUN;
