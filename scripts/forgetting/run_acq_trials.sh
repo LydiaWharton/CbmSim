@@ -37,7 +37,7 @@ do
     -s acq_ISI_${isi}.sess \
     -w PFPC \
     -r PC,NC \
-    -o acq_mins_ISI_${isi}
+    -o acq_std_ISI_${isi}
     echo 'finished training' ${isi}
 
 done
